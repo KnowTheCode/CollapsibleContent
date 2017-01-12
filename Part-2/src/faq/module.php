@@ -2,18 +2,20 @@
 /**
  * FAQ Module Controller
  *
- * @package     KnowTheCode\CollapsibleContent\FAQ
- * @since       1.1.0
+ * @package     KnowTheCode\Module\FAQ
+ * @since       1.0.0
  * @author      hellofromTonya
  * @link        https://KnowTheCode.io
  * @license     GNU-2.0+
  */
-namespace KnowTheCode\CollapsibleContent\FAQ;
+namespace KnowTheCode\Module\FAQ;
+
+define( 'FAQ_MODULE_TEXT_DOMAIN', COLLAPSIBLE_CONTENT_TEXT_DOMAIN );
 
 /**
  * Autoload the FAQ module.
  *
- * @since 1.1.0
+ * @since 1.0.0
  *
  * @return void
  */
@@ -36,7 +38,7 @@ register_activation_hook( COLLAPSIBLE_CONTENT_PLUGIN, __NAMESPACE__ . '\init_plu
 /**
  * Initialize the FAQ module upon plugin activation.
  *
- * @since 1.1.0
+ * @since 1.0.0
  *
  * @return void
  */

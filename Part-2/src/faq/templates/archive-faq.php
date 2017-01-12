@@ -2,13 +2,13 @@
 /**
  * FAQ Archive Template
  *
- * @package     KnowTheCode\CollapsibleContent\FAQ\Templates
- * @since       1.1.0
+ * @package     KnowTheCode\Module\FAQ\Templates
+ * @since       1.0.0
  * @author      hellofromTonya
  * @link        https://KnowTheCode.io
  * @license     GNU-2.0+
  */
-namespace KnowTheCode\CollapsibleContent\FAQ\Templates;
+namespace KnowTheCode\Module\FAQ\Templates;
 
 remove_action( 'genesis_loop', 'genesis_do_loop' );
 add_action( 'genesis_loop', __NAMESPACE__ . '\do_faq_archive_loop' );

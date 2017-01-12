@@ -2,13 +2,13 @@
 /**
  * Template Helpers
  *
- * @package     KnowTheCode\CollapsibleContent\FAQ\Templates
- * @since       1.1.0
+ * @package     KnowTheCode\Module\FAQ\Templates
+ * @since       1.0.0
  * @author      hellofromTonya
  * @link        https://KnowTheCode.io
  * @license     GNU-2.0+
  */
-namespace KnowTheCode\CollapsibleContent\FAQ\Templates;
+namespace KnowTheCode\Module\FAQ\Templates;
 
 add_filter( 'archive_template', __NAMESPACE__ . '\load_the_archive_template' );
 /**
@@ -18,7 +18,7 @@ add_filter( 'archive_template', __NAMESPACE__ . '\load_the_archive_template' );
  * the FAQ archive and the theme does not have its own
  * archive-faq.php file.
  *
- * @since 1.1.0
+ * @since 1.0.0
  *
  * @param string $archive_template Full path of the template to load
  *
@@ -48,7 +48,7 @@ function load_the_archive_template( $archive_template ) {
  *
  * Results are grouped by terms and ordered by the term and post IDs.
  *
- * @since 1.1.0
+ * @since 1.0.0
  *
  * @param string $post_type_name Post type to limit query to
  * @param string $taxonomy_name Taxonomy to limit query to
@@ -89,7 +89,7 @@ function get_posts_grouped_by_term( $post_type_name, $taxonomy_name ) {
  *
  * Results are grouped by terms and ordered by the term ID and menu order.
  *
- * @since 1.1.0
+ * @since 1.0.0
  *
  * @param string $post_type_name Post type to limit query to
  * @param string $taxonomy_name Taxonomy to limit query to

@@ -2,13 +2,13 @@
 /**
  * FAQ Shortcode Processing
  *
- * @package     KnowTheCode\CollapsibleContent\FAQ\Shortcode
+ * @package     KnowTheCode\Module\FAQ\Shortcode
  * @since       1.1.0
  * @author      hellofromTonya
  * @link        https://KnowTheCode.io
  * @license     GNU-2.0+
  */
-namespace KnowTheCode\CollapsibleContent\FAQ\Shortcode;
+namespace KnowTheCode\Module\FAQ\Shortcode;
 
 add_shortcode( 'faq', __NAMESPACE__ . '\process_the_shortcode' );
 /**
