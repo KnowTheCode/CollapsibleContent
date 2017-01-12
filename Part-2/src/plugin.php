@@ -33,17 +33,19 @@ function enqueue_assets() {
 /**
  * Autoload plugin files.
  *
- * @since 1.0.0
+ * @since 1.1.0
  *
  * @return void
  */
 function autoload() {
 	$files = array(
 		'shortcode/shortcodes.php',
+		'faq/module.php',
 	);
 
 	foreach( $files as $file ) {
 		include( __DIR__ . '/' . $file );
 	}
 }
+
 autoload();

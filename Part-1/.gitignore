@@ -4,6 +4,7 @@ phpunit.xml
 /bin
 tests/mocks/env/
 
+
 # Sass cache
 .sass-cache/
 
