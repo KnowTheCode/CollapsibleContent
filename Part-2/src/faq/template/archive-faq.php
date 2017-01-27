@@ -26,6 +26,7 @@ function do_faq_archive_loop() {
 	$records = get_posts_grouped_by_term( 'faq', 'topic' );
 	if ( ! $records ) {
 		echo '<p>Sorry, there are no FAQs.</p>';
+		return;
 	}
 
 	$use_term_container = true;
