@@ -2,44 +2,41 @@
 /**
  * Template Helpers
  *
- * @package     KnowTheCode\Module\FAQ\Templates
+ * @package     KnowTheCode\Module\FAQ\Template
  * @since       1.0.0
  * @author      hellofromTonya
  * @link        https://KnowTheCode.io
  * @license     GNU-2.0+
  */
-namespace KnowTheCode\Module\FAQ\Templates;
+namespace KnowTheCode\Module\FAQ\Template;
 
-add_filter( 'archive_template', __NAMESPACE__ . '\load_the_archive_template' );
+add_filter( 'archive_template', __NAMESPACE__ . '\load_the_faq_archive_template' );
 /**
- * Load the archive template.
- *
- * This function loads the plugin's template file if this is
- * the FAQ archive and the theme does not have its own
- * archive-faq.php file.
+ * Load the FAQ Archive template from our plugin.
  *
  * @since 1.0.0
  *
- * @param string $archive_template Full path of the template to load
+ * @param string $theme_archive_template Full qualified path to the archive template
  *
  * @return string
  */
-function load_the_archive_template( $archive_template ) {
+function load_the_faq_archive_template( $theme_archive_template ) {
+
 	if ( ! is_post_type_archive( 'faq' ) ) {
-		return $archive_template;
-	}
-	$template_file = 'archive-faq.php';
-
-	$theme_file = locate_template( array( $template_file ) );
-	if ( $theme_file && is_readable( $theme_file ) ) {
-		return $theme_file;
+		return $theme_archive_template;
 	}
 
-	$template_file = __DIR__ . '/' . $template_file;
+	$plugin_archive_template = __DIR__ . '/archive-faq.php';
 
-	return is_readable( $template_file )
-		? $template_file
-		: $archive_template;
+	if ( ! $theme_archive_template ) {
+		return $plugin_archive_template;
+	}
+
+	if ( strpos( $theme_archive_template, '/archive-faq.php' ) === false ) {
+		return $plugin_archive_template;
+	}
+
+	return $theme_archive_template;
 }
 
 /**
@@ -56,15 +53,13 @@ function load_the_archive_template( $archive_template ) {
  * @return array|false
  */
 function get_posts_grouped_by_term( $post_type_name, $taxonomy_name ) {
-	$records   = get_posts_grouped_by_term_from_db( $post_type_name, $taxonomy_name );
-	if ( ! $records ) {
-		return false;
-	}
+	$records = get_posts_grouped_by_term_from_db( $post_type_name, $taxonomy_name );
 
 	$groupings = array();
 	foreach ( $records as $record ) {
 		$term_id = (int) $record->term_id;
 		$post_id = (int) $record->post_id;
+
 		if ( ! array_key_exists( $term_id, $groupings ) ) {
 			$groupings[ $term_id ] = array(
 				'term_id'   => $term_id,
@@ -73,10 +68,12 @@ function get_posts_grouped_by_term( $post_type_name, $taxonomy_name ) {
 				'posts'     => array(),
 			);
 		}
+
 		$groupings[ $term_id ]['posts'][ $post_id ] = array(
 			'post_id'      => $post_id,
 			'post_title'   => $record->post_title,
 			'post_content' => $record->post_content,
+			'menu_order'   => $record->menu_order,
 		);
 	}
 
@@ -87,7 +84,7 @@ function get_posts_grouped_by_term( $post_type_name, $taxonomy_name ) {
  * Gets all of the posts grouped by terms for the specified
  * post type and taxonomy.
  *
- * Results are grouped by terms and ordered by the term ID and menu order.
+ * Results are grouped by terms and ordered by the term and post IDs.
  *
  * @since 1.0.0
  *
@@ -111,7 +108,7 @@ ORDER BY t.term_id, p.menu_order ASC;";
 
 	$sql_query = $wpdb->prepare( $sql_query, $post_type_name, $taxonomy_name );
 
-	$results   = $wpdb->get_results( $sql_query );
+	$results = $wpdb->get_results( $sql_query );
 	if ( ! $results || ! is_array( $results ) ) {
 		return false;
 	}
