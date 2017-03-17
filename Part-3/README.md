@@ -26,36 +26,11 @@ In this plugin, these parameters are plucked out of the codebase and put into co
 
 ### Custom Module
 
-Our plugins and themes are filled with redundant code.  We repeat ourselves over and over again.  
+Our plugins and themes are filled with redundant code.  We repeat ourselves over and over again. 
 
-Shortcodes.  If you have more than one in a project, then you are doing repetitive tasks of merging defaults with the user defined attributes, starting the output buffer, calling the view file, and then flushing out the output buffer.  
+The solution is to pluck all that redundant code out of our plugins and themes, placing it into a centralized repository.  Then your code interacts with the functionality and passes its runtime configuration to it.  
 
-Custom Post Types. If you have more than one in a project, yup, you're repeating yourself.  The labels and arguments can be generated instead.
-
-Taxonomies. Same thing.  You can generate those instead of filling your codebase with redundant code.
-
-This module plucks all of the common code out of the codebase.  It handles the following tasks:
-
-1. For Custom Post Types and Taxonomies:
-    1. Label generation (from your configuration)
-    2. Building of the arguments using your configuration
-    3. Registering each with WordPress
-2. For shortcodes:    
-    1. Registering the shortcode with WordPress
-    2. Loading and storing the configuration
-    3. Merging the user defined attributes with the defaults you specify in your configuration
-    4. Processing other shortcodes in the content, if your shortcode has content.
-    5. View processing:
-        1. If you specify a function, then it calls your code's function.
-        2. Or it turns on the output buffer, calls the view file you configured, and then pulls it off of the buffer and returns it to WordPress for you. (that means no extra code for you)
-         
-This module can be extended to include:
-
-1. Custom Fields
-2. Term metadata
-3. User metadata
-4. Widgets
-5. and more
+If you need to extend it, no problem.  The hooks are there.  You build only what is unique for your project's implementation.  
   
 ## Contributions
 
