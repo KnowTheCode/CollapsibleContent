@@ -1,9 +1,9 @@
 <?php
 /**
- * Custom Module Handler
+ * Description
  *
  * @package     KnowTheCode\Module\Custom
- * @since       1.3.0
+ * @since       1.0.0
  * @author      hellofromTonya
  * @link        https://KnowTheCode.io
  * @license     GNU-2.0+
@@ -11,9 +11,45 @@
 namespace KnowTheCode\Module\Custom;
 
 /**
- * Process the shortcode
+ * Register your shortcode with the Custom Module.
  *
- * @since 1.3.0
+ * @since 1.0.0
+ *
+ * @param string $pathto_configuration_file Absolute path to the configuration file's location.
+ *
+ * @return array|false
+ */
+function register_shortcode( $pathto_configuration_file ) {
+
+	if ( ! is_readable( $pathto_configuration_file ) ) {
+		return false;
+	}
+
+	$config = (array) include( $pathto_configuration_file );
+	$config = array_merge(
+		array(
+			'shortcode_name'              => '',
+			'do_shortcode_within_content' => true,
+			'processing_function'         => null,
+			'view'                        => '',
+			'defaults'                    => array(),
+		),
+		$config
+	);
+
+	if ( ! $config['shortcode_name'] || ! $config['view'] ) {
+		return false;
+	}
+
+	add_shortcode( $config['shortcode_name'], __NAMESPACE__ . '\process_the_shortcode_callback' );
+
+	return store_shortcode_configuration( $config['shortcode_name'], $config );
+}
+
+/**
+ * Process and render the HTML for the shortcode.
+ *
+ * @since 1.0.0
  *
  * @param array|string $user_defined_attributes User defined attributes for this shortcode instance
  * @param string|null $content Content between the opening and closing shortcode elements
@@ -23,9 +59,6 @@ namespace KnowTheCode\Module\Custom;
  */
 function process_the_shortcode_callback( $user_defined_attributes, $content, $shortcode_name ) {
 	$config = get_shortcode_configuration( $shortcode_name );
-	if ( ! $config ) {
-		return '';
-	}
 
 	$attributes = shortcode_atts(
 		$config['defaults'],
@@ -33,16 +66,17 @@ function process_the_shortcode_callback( $user_defined_attributes, $content, $sh
 		$shortcode_name
 	);
 
-	if ( $content && $config['process_content_shortcodes'] ) {
+	if ( $content && $config['do_shortcode_within_content'] ) {
 		$content = do_shortcode( $content );
 	}
 
-	if ( $config['shortcode_function'] ) {
-		$function_name = $config['shortcode_function'];
+	if ( $config['processing_function'] ) {
+		$function_name = $config['processing_function'];
 
 		return $function_name( $config, $attributes, $content, $shortcode_name );
 	}
 
+	// Call the view file, capture it into the output buffer, and then return it.
 	ob_start();
 	include( $config['view'] );
 
@@ -50,77 +84,52 @@ function process_the_shortcode_callback( $user_defined_attributes, $content, $sh
 }
 
 /**
- * Get the shortcode's runtime configuration parameters.
+ * Get the runtime configuration parameters for the specified shortcode.
  *
- * @since 1.3.0
+ * @since 1.0.0
  *
  * @param string $shortcode_name Name of the shortcode
  *
- * @return array
+ * @return array|false
  */
 function get_shortcode_configuration( $shortcode_name ) {
-	return _shortcode_configuration_store( $shortcode_name, null );
+	return _shortcode_configuration_store( $shortcode_name );
 }
 
 /**
- * Register a shortcode configuration.
+ * Store the shortcode runtime configuration parameters into the
+ * static store.
  *
- * This function does the following tasks:
- *      1. Checks if the configuration file is readable. If no, it returns an empty array.
- *      2. Loads the configuration file
- *      3. Merges it with the defaults, i.e. to ensure all parameters are loaded as expected.
- *      4. Register the shortcode with WordPress using `add_shortcode`
- *      5. Caches the configuration in the config store
- *      6. Returns the configuration.
- *
- * @since 1.3.0
- *
- * @param string $file Absolute path to the configuration file.
- *
- * @return array
- */
-function register_shortcode_configuration( $file ) {
-
-	if ( ! is_readable( $file ) ) {
-		return array();
-	}
-
-	$config = array_merge(
-		array(
-			'shortcode_name'     => '',
-			'shortcode_function' => null,
-			'view'               => '',
-			'defaults'           => array(),
-
-		),
-		require( $file )
-	);
-
-	add_shortcode( $config['shortcode_name'], __NAMESPACE__ . '\process_the_shortcode_callback' );
-
-	return _shortcode_configuration_store( $config['shortcode_name'], $config );
-}
-
-/**
- * Shortcode configuration cache store.  Shortcodes can be called over and over
- * again on the same web page.  To speed up the configuration process, we cache
- * a shortcode's configuration the first time it's registered.
- *
- * @since 1.3.0
+ * @since 1.0.0
  *
  * @param string $shortcode_name Name of the shortcode
- * @param array|null $config Array of runtime configuration parameters.
- *                          Set to null to get the config out of the store.
+ * @param array $config Array of runtime configuration parameters to store.
  *
- * @return mixed
+ * @return array|false
  */
-function _shortcode_configuration_store( $shortcode_name, $config = null ) {
+function store_shortcode_configuration( $shortcode_name, $config ) {
+	return _shortcode_configuration_store( $shortcode_name, $config );
+}
+
+/**
+ * Shortcode configuration store.
+ *
+ * 1. Storing the configurations into a static store.
+ * 2. Getting the configuration out of the store.
+ *
+ * @since 1.0.0
+ *
+ * @param string $shortcode_name Name of the shortcode to be used as a key.
+ * @param array $config Array of runtime configuration parameters to store.
+ *                      (optional)
+ *
+ * @return array|false
+ */
+function _shortcode_configuration_store( $shortcode_name, $config = false ) {
 	static $configurations = array();
 
-	if ( ! isset( $configurations[ $shortcode_name ] )  && ! is_null( $config ) ) {
+	if ( ! isset( $configurations[ $shortcode_name ] ) ) {
 		$configurations[ $shortcode_name ] = $config;
-	} else if ( is_null( $config ) ) {
-		return false;
 	}
 
 	return $configurations[ $shortcode_name ];

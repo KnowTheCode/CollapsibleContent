@@ -1,46 +1,42 @@
 <?php
 /**
- * Runtime configuration for the Topic taxonomy.
+ * Runtime configuration for a taxonomy.
  *
- * @package     KnowTheCode\Module\FAQ
+ * @package     KnowTheCode\Module\Custom
  * @since       1.0.0
  * @author      hellofromTonya
  * @link        https://KnowTheCode.io
  * @license     GNU-2.0+
  */
-namespace KnowTheCode\Module\FAQ;
+namespace KnowTheCode\Module\Custom;
 
 return array(
 	/**=====================================
 	 * The taxonomy name.
 	 *======================================*/
-	'taxonomy'   => 'topic',
+	'taxonomy'   => '',
 
 	/**=====================================
 	 * These are label configuration.
 	 *======================================*/
 	'labels'     => array(
-		'custom_type'       => 'topic',
-		'singular_label'    => 'Topic',
-		'plural_label'      => 'Topics',
-		'in_sentence_label' => 'topics',
-		'text_domain'       => FAQ_MODULE_TEXT_DOMAIN,
+		'custom_type'       => '', // the taxonomy name from above.
+		'singular_label'    => '',
+		'plural_label'      => '',
+		'in_sentence_label' => '',
+		'text_domain'       => '',
 	),
 
 	/**=====================================
 	 * These are the arguments for registering the taxonomy.
 	 *======================================*/
 	'args'       => array(
-		'label'             => __( 'Topics', FAQ_MODULE_TEXT_DOMAIN ),
+		'label'             => '',
 		'labels'            => '', // automatically generate the labels.
-		'hierarchical'      => true,
-		'show_admin_column' => true,
-		'public'            => false,
-		'show_ui'           => true,
 	),
 
 	/**=====================================
 	 * These are the post types to bind the taxonomy to.
 	 *======================================*/
-	'post_types' => array( 'faq' ),
+	'post_types' => array( '' ),
 );

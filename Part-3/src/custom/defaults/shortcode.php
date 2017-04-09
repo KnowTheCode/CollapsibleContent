@@ -1,49 +1,45 @@
 <?php
 /**
- * Shortcode runtime configuration default parameters.
+ * The default shortcode runtime configuration parameters.
  *
- * @package     KnowTheCode\Module\Shortcode
+ * @package     KnowTheCode\Module\Custom
  * @since       1.0.0
  * @author      hellofromTonya
  * @link        https://KnowTheCode.io
  * @license     GNU-2.0+
  */
-namespace KnowTheCode\Module\Shortcode;
+namespace KnowTheCode\Module\Custom;
 
 return array(
-	/**============================================================
-	 * Available default attributes.  Each of these is overridable
-	 * by the user/author when adding the shortcode into the content.
-	 *=============================================================*/
+
+	/**=================================================
+	 * Shortcode name, the name within the square brackets
+	 *==================================================*/
 	'shortcode_name' => '',
 
-	/**============================================================
-	 * If the shortcode needs additional processing beyond just
-	 * calling the view file, specify the function here. Else, this
-	 * module will simply start the output buffer, call the specified
-	 * view file, and then return and clean the output buffer.
-	 *=============================================================*/
-	'shortcode_function' => null,
+	/**=================================================
+	 * Specify if you want do_shortcode() to run on the
+	 * content between the shortcode opening and closing
+	 * brackets. Defaults to true.
+	 *==================================================*/
+	'do_shortcode_within_content' => true,
 
-	/**============================================================
-	 * When set to true, all shortcodes contained in the content
-	 * will be processed.  Note: the `content` is any content passed
-	 * to the shortcode that is contained between the opening and
-	 * closing shortcode braces.
-	 *
-	 * This parameter makes sure that any shortcodes contained within
-	 * that content do get processed.
-	 *=============================================================*/
-	'process_content_shortcodes' => false,
+	/**=================================================
+	 * Specify the processing function when you want
+	 * your code to handle the output buffer, view, and
+	 * processing. Defaults to null.
+	 *==================================================*/
+	'processing_function' => null,
 
-	/**============================================================
-	 * View file for the shortcode's HTML
-	 *=============================================================*/
+	/**=================================================
+	 * The absolute path to the view file. If more than
+	 * one, use an array of view files.
+	 *==================================================*/
 	'view'    => '',
 
-	/**============================================================
-	 * Available default attributes.  Each of these is overridable
-	 * by the user/author when adding the shortcode into the content.
-	 *=============================================================*/
+	/**=================================================
+	 * Defined shortcode default attributes.  Each is
+	 * overridable by the author.
+	 *==================================================*/
 	'defaults' => array(),
 );

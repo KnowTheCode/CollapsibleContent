@@ -3,7 +3,7 @@
  * FAQ Shortcode Processing
  *
  * @package     KnowTheCode\Module\FAQ\Shortcode
- * @since       1.3.0
+ * @since       1.0.0
  * @author      hellofromTonya
  * @link        https://KnowTheCode.io
  * @license     GNU-2.0+
@@ -15,14 +15,14 @@ namespace KnowTheCode\Module\FAQ\Shortcode;
  *
  * @since 1.3.0
  *
- * @param array $config Array of configuration parameters
- * @param array $attributes User defined attributes for this shortcode instance
+ * @param array $config Array of runtime configuration parameters.
+ * @param array $attributes Attributes for this shortcode instance
  * @param string|null $content Content between the opening and closing shortcode elements
  * @param string $shortcode_name Name of the shortcode
  *
  * @return string
  */
-function process_the_faq_shortcode( $config, $attributes, $content, $shortcode_name ) {
+function process_the_faq_shortcode( array $config, array $attributes, $content, $shortcode_name ) {
 
 	$attributes['post_id'] = (int) $attributes['post_id'];
 
@@ -47,7 +47,7 @@ function process_the_faq_shortcode( $config, $attributes, $content, $shortcode_n
 /**
  * Render the single FAQ.
  *
- * @since 1.0.0
+ * @since 1.3.0
  *
  * @param array $attributes
  * @param array $config
@@ -65,13 +65,13 @@ function render_single_faq( array $attributes, array $config ) {
 	$post_title         = $faq->post_title;
 	$hidden_content     = do_shortcode( $faq->post_content );
 
-	include( $config['views']['container_single'] );
+	include( $config['view']['container_single'] );
 }
 
 /**
  * Render the Topic FAQs.
  *
- * @since 1.0.0
+ * @since 1.3.0
  *
  * @param array $attributes
  * @param array $config
@@ -103,7 +103,7 @@ function render_topic_faqs( array $attributes, array $config ) {
 	$is_calling_source  = 'shortcode-by-topic';
 	$term_slug          = $attributes['topic'];
 
-	include( $config['views']['container_topic'] );
+	include( $config['view']['container_topic'] );
 
 	wp_reset_postdata();
 }
@@ -111,7 +111,7 @@ function render_topic_faqs( array $attributes, array $config ) {
 /**
  * Loop through the query and render out the FAQs by topic.
  *
- * @since 1.0.0
+ * @since 1.3.0
  *
  * @param \WP_Query $query
  * @param array $attributes
@@ -126,7 +126,7 @@ function loop_and_render_faqs_by_topic( \WP_Query $query, array $attributes, arr
 		$post_title     = get_the_title();
 		$hidden_content = do_shortcode( get_the_content() );
 
-		include( $config['views']['faq'] );
+		include( $config['view']['faq'] );
 	}
 }
 
@@ -151,3 +151,4 @@ function render_none_found_message( array $attributes, $is_single_faq = true ) {
 
 	echo "<p>{$message}</p>";
 }
+

@@ -1,60 +1,52 @@
 <?php
 /**
- * Runtime configuration for the FAQ custom post type.
+ * Runtime configuration for a custom post type.
  *
- * @package     KnowTheCode\Module\FAQ
+ * @package     KnowTheCode\Module\Custom
  * @since       1.0.0
  * @author      hellofromTonya
  * @link        https://KnowTheCode.io
  * @license     GNU-2.0+
  */
-namespace KnowTheCode\Module\FAQ;
+namespace KnowTheCode\Module\Custom;
 
 return array(
 	/**=====================================
 	 * The post type name.
 	 *======================================*/
-	'post_type' => 'faq',
+	'post_type' => '',
 
 	/**=====================================
 	 * These are label configuration.
 	 *======================================*/
-	'labels' => array(
-		'custom_type'         => 'faq',
-		'singular_label'    => 'FAQ',
-		'plural_label'      => 'FAQs',
-		'in_sentence_label' => 'frequently asked questions (FAQs)',
-		'text_domain'       => FAQ_MODULE_TEXT_DOMAIN,
+	'labels'    => array(
+		'custom_type'       => '', // the post type from above.
+		'singular_label'    => '',
+		'plural_label'      => '',
+		'in_sentence_label' => '', // the label used within a sentence
+		'text_domain'       => '',
 	),
 
 	/**=====================================
 	 * Supported features for this post type.
 	 *======================================*/
-	'features' => array(
+	'features'  => array(
 		'base_post_type' => 'post',
-		'exclude'        => array(
-			'excerpt',
-			'comments',
-			'trackbacks',
-			'custom-fields',
-//		'thumbnail',
-		),
-		'additional'     => array(
-			'page-attributes',
-		),
+		'exclude'        => array(),
+		'additional'     => array(),
 	),
 
 	/**=====================================
 	 * Registration arguments.
 	 *======================================*/
-	'args' => array(
-		'description' => 'Frequently Asked Questions (FAQ)',
-		'label'       => __( 'FAQs', FAQ_MODULE_TEXT_DOMAIN ),
+	'args'      => array(
+		'description' => '',
+		'label'       => '',
 		'labels'      => '', // automatically generate the labels.
 		'public'      => true,
 		'supports'    => '', // automatically generate the support features.
-		'menu_icon'   => 'dashicons-editor-help',
-		'has_archive' => true,
+		'menu_icon'   => '',
+		'has_archive' => false,
 	),
 
 );

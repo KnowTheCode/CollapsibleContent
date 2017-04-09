@@ -10,11 +10,42 @@
  */
 namespace KnowTheCode\Module\FAQ;
 
-use KnowTheCode\Module\Custom as custom;
+use KnowTheCode\Module\Custom as CustomModule;
 
 define( 'FAQ_MODULE_TEXT_DOMAIN', COLLAPSIBLE_CONTENT_TEXT_DOMAIN );
-define( 'FAQ_MODULE_DIR', __DIR__ );
-define( 'FAQ_MODULE_CONFIG_DIR', FAQ_MODULE_DIR . '/config/' );
+define( 'FAQ_MODULE_DIR', trailingslashit( __DIR__ ) );
+
+add_filter( 'add_custom_post_type_runtime_config', __NAMESPACE__ . '\register_faq_custom_configs' );
+add_filter( 'add_custom_taxonomy_runtime_config', __NAMESPACE__ . '\register_faq_custom_configs' );
+/**
+ * Loading in the post type and taxonomy runtime configurations with
+ * the Custom Module.
+ *
+ * @since 1.3.0
+ *
+ * @param array $configurations Array of all the configurations.
+ *
+ * @return void
+ */
+function register_faq_custom_configs( array $configurations ) {
+	$doing_post_type = current_filter() == 'add_custom_post_type_runtime_config';
+
+	$filename = $doing_post_type
+		? 'post-type'
+		: 'taxonomy';
+	$runtime_config = (array) require( FAQ_MODULE_DIR . 'config/' . $filename . '.php' );
+	if ( ! $runtime_config ) {
+		return $configurations;
+	}
+
+	$key = $doing_post_type
+		? $runtime_config['post_type']
+		: $runtime_config['taxonomy'];
+
+	$configurations[ $key ] = $runtime_config;
+
+	return $configurations;
+}
 
 /**
  * Autoload plugin files.
@@ -25,7 +56,7 @@ define( 'FAQ_MODULE_CONFIG_DIR', FAQ_MODULE_DIR . '/config/' );
  */
 function autoload() {
 	$files = array(
-		'custom/shortcode.php',
+		'shortcode/shortcode.php',
 		'template/helpers.php'
 	);
 
@@ -34,6 +65,7 @@ function autoload() {
 	}
 }
 
+add_action( 'plugins_loaded', __NAMESPACE__ . '\setup_module' );
 /**
  * Setup the module.
  *
@@ -41,36 +73,8 @@ function autoload() {
  *
  * @return void
  */
-function setup() {
-	custom\register_shortcode_configuration( FAQ_MODULE_CONFIG_DIR . 'shortcode.php' );
-}
-
-add_filter( 'get_custom_post_types_runtime_config', __NAMESPACE__ . '\register_faq_custom' );
-add_filter( 'get_custom_taxonomy_runtime_config', __NAMESPACE__ . '\register_faq_custom' );
-/**
- * Register the FAQ custom post type with the CPT handler by adding its
- * runtime configuration to the filter.
- *
- * @since 1.3.0
- *
- * @param array $configurations An array of post type configurations
- *
- * @return array
- */
-function register_faq_custom( array $configurations ) {
-	$doing_post_type = current_filter() == 'get_custom_post_types_runtime_config';
-
-	$filename = $doing_post_type ? 'post-type' : 'taxonomy';
-	$runtime_config = (array) require( FAQ_MODULE_DIR . '/config/' . $filename . '.php' );
-	if ( ! $runtime_config ) {
-		return $configurations;
-	}
-
-	$key = $doing_post_type ? $runtime_config['post_type'] : $runtime_config['taxonomy'];
-
-	$configurations[ $key ] = $runtime_config;
-
-	return $configurations;
+function setup_module() {
+	CustomModule\register_shortcode( FAQ_MODULE_DIR . 'config/shortcode.php' );
 }
 
 autoload();

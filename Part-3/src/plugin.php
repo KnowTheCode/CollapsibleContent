@@ -10,8 +10,7 @@
  */
 namespace KnowTheCode\CollapsibleContent;
 
-use KnowTheCode\Module\FAQ as faq_module;
-use KnowTheCode\Module\Custom as custom_module;
+use KnowTheCode\Module\Custom as CustomModule;
 
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\enqueue_assets' );
 /**
@@ -28,7 +27,7 @@ function enqueue_assets() {
 		'collapsible-content-plugin-script',
 		COLLAPSIBLE_CONTENT_URL . 'assets/dist/js/jquery.plugin.min.js',
 		array('jquery'),
-		'1.3.0',
+		'1.0.0',
 		true
 	);
 }
@@ -36,7 +35,7 @@ function enqueue_assets() {
 /**
  * Autoload plugin files.
  *
- * @since 1.0.0
+ * @since 1.3.0
  *
  * @return void
  */
@@ -51,22 +50,23 @@ function autoload() {
 	}
 }
 
-add_action( 'plugins_loaded', __NAMESPACE__ . '\setup' );
+add_action( 'plugins_loaded', __NAMESPACE__ . '\setup_plugin' );
 /**
- * Run setup tasks.
+ * Setup the plugin.
  *
  * @since 1.3.0
  *
  * @return void
  */
-function setup() {
+function setup_plugin() {
 	foreach( array( 'qa', 'teaser' ) as $shortcode ) {
-		$file   = sprintf( '%s/shortcode/%s.php', COLLAPSIBLE_CONTENT_CONFIG_DIR, $shortcode );
+		$pathto_configuration_file = sprintf( '%s/config/shortcode/%s.php',
+			COLLAPSIBLE_CONTENT_DIR,
+			$shortcode
+		);
 
-		custom_module\register_shortcode_configuration( $file );
+		CustomModule\register_shortcode( $pathto_configuration_file );
 	}
-
-	faq_module\setup();
 }
 
 autoload();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Custom Module Handler
+ * Custom Module Handler - bootstrap file for the module.
  *
  * @package     KnowTheCode\Module\Custom
  * @since       1.0.0
@@ -10,13 +10,7 @@
  */
 namespace KnowTheCode\Module\Custom;
 
-// Whoops, this module is already from another plugin.
-if ( function_exists( __NAMESPACE__ . 'register_the_custom_post_type' ) ) {
-	return;
-}
-
-// Change this variable's value when using with another plugin.
-$plugin_bootstrap = COLLAPSIBLE_CONTENT_PLUGIN;
+define( 'CUSTOM_MODULE_DIR', __DIR__ );
 
 /**
  * Autoload plugin files.
@@ -29,8 +23,8 @@ function autoload() {
 	$files = array(
 		'label-generator.php',
 		'post-type.php',
-		'taxonomy.php',
 		'shortcode.php',
+		'taxonomy.php'
 	);
 
 	foreach( $files as $file ) {
@@ -40,42 +34,29 @@ function autoload() {
 
 autoload();
 
-register_activation_hook( $plugin_bootstrap, __NAMESPACE__ . '\activate_the_plugin' );
 /**
- * Initialize the rewrites for our new custom post type
- * upon activation.
+ * Register a plugin with the Custom Module.
  *
  * @since 1.0.0
  *
+ * @param string $plugin_file
+ *
  * @return void
  */
-function activate_the_plugin() {
-	register_the_custom_post_type();
-	register_the_custom_taxonomies();
-
-	flush_rewrite_rules();
+function register_plugin( $plugin_file ) {
+	register_activation_hook( $plugin_file, __NAMESPACE__ . '\delete_rewrite_rules_on_plugin_status_change' );
+	register_deactivation_hook( $plugin_file, __NAMESPACE__ . '\delete_rewrite_rules_on_plugin_status_change' );
+	register_uninstall_hook( $plugin_file, __NAMESPACE__ . '\delete_rewrite_rules_on_plugin_status_change' );
 }
 
-register_deactivation_hook( $plugin_bootstrap, __NAMESPACE__ . '\deactivate_plugin' );
 /**
- * The plugin is deactivating.  Delete out the rewrite rules option.
+ * Delete the rewrite rules on plugin status change, i.e.
+ * activation, deactivation, or uninstall.
  *
  * @since 1.0.0
  *
  * @return void
  */
-function deactivate_plugin() {
-	delete_option( 'rewrite_rules' );
-}
-
-register_uninstall_hook( $plugin_bootstrap, __NAMESPACE__ . '\uninstall_plugin' );
-/**
- * Plugin is being uninstalled. Clean up after ourselves...silly.
- *
- * @since 1.0.0
- *
- * @return void
- */
-function uninstall_plugin() {
+function delete_rewrite_rules_on_plugin_status_change() {
 	delete_option( 'rewrite_rules' );
 }
